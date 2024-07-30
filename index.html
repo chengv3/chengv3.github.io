@@ -38,6 +38,11 @@
             cursor: pointer;
         }
 
+        #spin-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
         #result-message {
             margin-top: 20px;
             font-size: 1.2em;
@@ -64,9 +69,12 @@
         <p>Total Losses: <span id="total-losses">0</span></p>
     </div>
 
+    <!-- Include the canvas-confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         let totalWins = 0;
         let totalLosses = 0;
+        let spinDelay = 800; // Delay between spins in milliseconds
 
         document.getElementById('spin-button').addEventListener('click', spin);
 
@@ -76,6 +84,10 @@
             let reel2 = document.getElementById('reel2');
             let reel3 = document.getElementById('reel3');
             let resultMessage = document.getElementById('result-message');
+            let spinButton = document.getElementById('spin-button');
+
+            // Disable the spin button during the spin
+            spinButton.disabled = true;
 
             // Function to simulate spinning with a delay
             function spinReel(reel, delay) {
@@ -92,6 +104,15 @@
                 });
             }
 
+            // Function to trigger confetti
+            function triggerConfetti() {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
             // Spin each reel with a slight delay between each
             Promise.all([spinReel(reel1, 100), spinReel(reel2, 150), spinReel(reel3, 200)])
                 .then(() => {
@@ -101,12 +122,18 @@
                         resultMessage.style.color = 'green';
                         totalWins++;
                         document.getElementById('total-wins').textContent = totalWins;
+                        triggerConfetti();
                     } else {
                         resultMessage.textContent = 'Try again!';
                         resultMessage.style.color = 'red';
                         totalLosses++;
                         document.getElementById('total-losses').textContent = totalLosses;
                     }
+
+                    // Re-enable the spin button after the delay
+                    setTimeout(() => {
+                        spinButton.disabled = false;
+                    }, spinDelay);
                 });
         }
     </script>
