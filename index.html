@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        #slot-machine {
+            display: flex;
+            border: 2px solid #333;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .reel {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+        }
+
+        #spin-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #result-message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="slot-machine">
+        <div class="reel" id="reel1">🍒</div>
+        <div class="reel" id="reel2">🍋</div>
+        <div class="reel" id="reel3">🍉</div>
+    </div>
+    <button id="spin-button">Spin</button>
+    <div id="result-message"></div>
+    <div id="scoreboard">
+        <p>Total Wins: <span id="total-wins">0</span></p>
+        <p>Total Losses: <span id="total-losses">0</span></p>
+    </div>
+
+    <script>
+        let totalWins = 0;
+        let totalLosses = 0;
+
+        document.getElementById('spin-button').addEventListener('click', spin);
+
+        function spin() {
+            const reels = ['🍒', '🍋', '🍉', '🍇', '🍓', '🍌'];
+            let reel1 = document.getElementById('reel1');
+            let reel2 = document.getElementById('reel2');
+            let reel3 = document.getElementById('reel3');
+            let resultMessage = document.getElementById('result-message');
+
+            // Function to simulate spinning with a delay
+            function spinReel(reel, delay) {
+                return new Promise((resolve) => {
+                    let count = 0;
+                    let spinInterval = setInterval(() => {
+                        reel.textContent = reels[Math.floor(Math.random() * reels.length)];
+                        count++;
+                        if (count > 10) {
+                            clearInterval(spinInterval);
+                            resolve();
+                        }
+                    }, delay);
+                });
+            }
+
+            // Spin each reel with a slight delay between each
+            Promise.all([spinReel(reel1, 100), spinReel(reel2, 150), spinReel(reel3, 200)])
+                .then(() => {
+                    // Check for a win
+                    if (reel1.textContent === reel2.textContent && reel2.textContent === reel3.textContent) {
+                        resultMessage.textContent = 'You win!';
+                        resultMessage.style.color = 'green';
+                        totalWins++;
+                        document.getElementById('total-wins').textContent = totalWins;
+                    } else {
+                        resultMessage.textContent = 'Try again!';
+                        resultMessage.style.color = 'red';
+                        totalLosses++;
+                        document.getElementById('total-losses').textContent = totalLosses;
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
