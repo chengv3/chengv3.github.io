@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slot Machine</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
         body {
             display: flex;
@@ -74,7 +77,7 @@
     <script>
         let totalWins = 0;
         let totalLosses = 0;
-        let spinDelay = 800; // Delay between spins in milliseconds
+        let spinDelay = 2000; // Delay between spins in milliseconds
 
         document.getElementById('spin-button').addEventListener('click', spin);
 
